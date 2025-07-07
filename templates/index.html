@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FetchCo The Meme Generator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div id="background-layer"></div>
+
+  <div class="container">
+    <div class="title-wrapper">
+      <div class="title-row">
+        <img src="{{ url_for('static', filename='gifs/title.gif') }}" alt="Left GIF" class="title-gif" />
+        <h1 id="site-title" class = "rainbow">FetchCo</h1>
+        <img src="{{ url_for('static', filename='gifs/title.gif') }}" alt="Right GIF" class="title-gif" />
+      </div>
+      <h2 class="subtitle">🔥 The Meme Provider 🔥</h2>
+    </div>
+
+    <div class="genre-row">
+      <label for="genre">Choose meme genre:</label>
+      <select id="genre">
+        {% for g in genres %}
+          <option value="{{ g }}">{{ g }}</option>
+        {% endfor %}
+      </select>
+      <button id="generate-btn">Fetch Meme</button>
+    </div>
+
+    <div id="meme-container">
+      <img id="meme-image" style="display:none;" alt="Your meme will appear here!" class="loading"/>
+      <p class="subreddit" id="subreddit-text">Welcome to Meme Generator! Select a genre and click "Fetch Meme".</p>
+    </div>
+
+    <p id="timer-text"></p>
+  </div>
+
+<script>
+  const generateBtn = document.getElementById("generate-btn");
+  const timerText = document.getElementById("timer-text");
+  const memeImg = document.getElementById("meme-image");
+  const subredditText = document.getElementById("subreddit-text");
+  const genreSelect = document.getElementById("genre");
+  const backgroundLayer = document.getElementById("background-layer");
+
+  
+  const gifs = [
+    "{{ url_for('static', filename='gifs/b1.gif') }}",
+    "{{ url_for('static', filename='gifs/b2.gif') }}",
+    "{{ url_for('static', filename='gifs/b3.gif') }}",
+    "{{ url_for('static', filename='gifs/b4.gif') }}",
+    "{{ url_for('static', filename='gifs/b5.gif') }}"
+  ];
+
+  let gifIndex = 0;
+
+  function rotateGifs() {
+    backgroundLayer.style.backgroundImage = `url('${gifs[gifIndex]}')`;
+    gifIndex = (gifIndex + 1) % gifs.length;
+  }
+
+  // Initial background
+  rotateGifs();
+  setInterval(rotateGifs, 15000);
+
+  function startCooldown() {
+    generateBtn.disabled = true;
+    let remaining = 10;
+    timerText.textContent = `Wait ${remaining} seconds to fetch another meme.`;
+
+    const interval = setInterval(() => {
+      remaining--;
+      if (remaining <= 0) {
+        clearInterval(interval);
+        generateBtn.disabled = false;
+        timerText.textContent = '';
+      } else {
+        timerText.textContent = `Wait ${remaining} seconds to fetch another meme.`;
+      }
+    }, 1000);
+  }
+
+  async function fetchMeme() {
+    const genre = genreSelect.value;
+    memeImg.classList.add("loading");
+
+    try {
+      const res = await fetch(`/fetch_meme?genre=${genre}`);
+      const data = await res.json();
+      
+      // Only show fallback if there's an error
+      if (data.sub === "Error") {
+        memeImg.src = "/static/fallback.jpg";
+        subredditText.textContent = "Oops! Couldn't fetch meme. Showing fallback.";
+      } else {
+        memeImg.src = data.meme_pic;
+        subredditText.textContent = `Source: r/${data.sub}`;
+      }
+      
+      memeImg.style.display = "block";
+    } catch (err) {
+      memeImg.src = "/static/fallback.jpg";
+      subredditText.textContent = "Oops! Couldn't fetch meme. Showing fallback.";
+      memeImg.style.display = "block";
+      console.error("Failed to fetch meme", err);
+    } finally {
+      memeImg.onload = () => memeImg.classList.remove("loading");
+    }
+  }
+
+
+  generateBtn.addEventListener("click", () => {
+    fetchMeme();
+    startCooldown();
+  });
+
+  document.getElementById("site-title").addEventListener("click", () => {
+    location.reload(); // Reloads the page
+  });
+</script>
+
+  <div class="pov">
+    <p class="text">You rn:</p>
+    <img src="{{ url_for('static', filename='gifs/u.gif') }}" alt="You right now" class="pov-gif" />
+  </div>
+
+</body>
+</html>
