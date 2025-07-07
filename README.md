@@ -17,3 +17,18 @@ FetchCo is a dynamic meme generator web application built with Flask and JavaScr
 
 ## 📂 Project Structure
 
+project/
+│
+├── static/
+│ ├── gifs/
+│ │ ├── b1.gif, b2.gif, ..., you_rn.gif
+│ ├── fallback.jpg
+│ └── style.css
+│
+├── templates/
+│ └── index.html
+│
+├── app.py # Flask server
+├── requirements.txt # Python dependencies
+├── .gitignore
+└── README.md
