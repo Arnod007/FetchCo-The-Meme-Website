@@ -11,7 +11,6 @@ FetchCo is a dynamic meme generator web application built with Flask and JavaScr
 - 🔄 Dynamic background GIF rotator
 - ⏳ Cooldown timer to prevent spamming
 - ✨ Color-shifting title with GIFs on both sides
-- 🤖 "You rn" GIF in the top-right corner
 - 🎨 Animated border around the meme display section
 
 ---
