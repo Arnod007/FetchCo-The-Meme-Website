@@ -1,0 +1,39 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+venv/
+.env/
+
+# macOS and Linux
+.DS_Store
+
+# VSCode settings
+.vscode/
+
+# Flask/Python stuff
+instance/
+*.db
+
+# Logs
+*.log
+
+# Pytest
+.cache/
+
+# IDE files
+*.swp
+.idea/
+
+# Node/npm (if you add frontend tooling later)
+node_modules/
+
+# Compiled files
+*.exe
+*.out
+*.o
+
+# Static files you don’t want tracked (uncomment if needed)
+# static/gifs/
